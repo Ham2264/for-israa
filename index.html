@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Esraa 3D Cinematic Heart</title>
+<title>Esraa 3D Heart Journey</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
@@ -17,11 +17,11 @@ font-family:'Cairo',sans-serif;
 
 body{
 overflow:hidden;
-background:radial-gradient(circle at center,#0a0010,#000);
+background:radial-gradient(circle at center,#120018,#000);
 color:white;
 }
 
-/* UI screens */
+/* ===== SCREENS ===== */
 .screen{
 position:absolute;
 width:100%;
@@ -29,22 +29,25 @@ height:100%;
 display:none;
 justify-content:center;
 align-items:center;
-flex-direction:column;
 text-align:center;
+flex-direction:column;
 z-index:10;
 }
 
-.active{ display:flex; }
+.active{
+display:flex;
+}
 
 .card{
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(12px);
-padding:28px;
-border-radius:22px;
-box-shadow:0 0 35px rgba(255,0,150,0.25);
-max-width:360px;
+padding:30px;
+border-radius:25px;
+max-width:380px;
+box-shadow:0 0 40px rgba(255,0,150,0.25);
 }
 
+/* BUTTON */
 button{
 margin-top:15px;
 padding:12px 22px;
@@ -58,104 +61,110 @@ box-shadow:0 0 20px #ff2fa5;
 transition:0.3s;
 }
 
-button:hover{ transform:scale(1.08); }
+button:hover{
+transform:scale(1.08);
+}
 
-/* name */
+/* NAME */
 #name{
 position:absolute;
+top:55%;
 width:100%;
 text-align:center;
-top:55%;
-font-size:50px;
-color:#ff6fd5;
-text-shadow:0 0 25px #ff2fa5;
+font-size:0px;
 opacity:0;
-transition:1.5s;
+color:#ff5fd2;
+text-shadow:0 0 25px #ff2fa5,0 0 60px #ff2fa5;
+transition:2s;
 z-index:5;
 }
 
-/* canvas */
+/* CANVAS */
 canvas{
 position:absolute;
 top:0;
 left:0;
 }
 
-/* graph overlay */
-#graph{
-position:absolute;
-top:0;
-left:0;
-z-index:2;
-opacity:0.25;
+/* small hint */
+.hint{
+opacity:0.8;
+font-size:14px;
+margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- UI -->
+<!-- ===== STAGE 1 ===== -->
 <div class="screen active" id="s1">
 <div class="card">
-<h1>💖 Esraa Cinematic Heart</h1>
-<p>تجربة 3D سينمائية + رياضيات + مؤثرات</p>
+<h1>💖 تجربة قلب إسراء</h1>
+<p>رحلة 3D سينمائية + مراحل + مؤثرات</p>
 <button onclick="go(2)">ابدأ</button>
 </div>
 </div>
 
+<!-- ===== STAGE 2 ===== -->
 <div class="screen" id="s2">
 <div class="card">
-<h1>🌌 تهيئة الكون</h1>
-<p>جاري إنشاء النجوم والإحداثيات...</p>
-<button onclick="initScene()">تشغيل</button>
+<h1>🌌 المرحلة 1</h1>
+<p>تهيئة الكون الثلاثي الأبعاد</p>
+<div class="hint">جاري تحميل الإضاءة والنجوم...</div>
+<button onclick="initScene()">تشغيل العالم</button>
 </div>
 </div>
 
+<!-- ===== STAGE 3 ===== -->
 <div class="screen" id="s3">
 <div class="card">
-<h1>💗 بناء القلب</h1>
-<p>تفعيل الفيزياء + النبض + الرسم</p>
+<h1>💗 المرحلة 2</h1>
+<p>تشكيل القلب الرياضي</p>
+<div class="hint">سيبدأ الرسم الآن</div>
 <button onclick="startHeart()">ابدأ الرسم</button>
 </div>
 </div>
 
+<!-- ===== STAGE 4 ===== -->
 <div class="screen" id="s4">
 <div class="card">
 <h1>🎀 النهاية</h1>
-<p>تم اكتمال القلب</p>
-<button onclick="location.reload()">إعادة</button>
+<p>تم اكتمال القلب بنجاح</p>
+<button onclick="location.reload()">إعادة التجربة</button>
 </div>
 </div>
 
 <div id="name">إسراء</div>
 
-<canvas id="graph"></canvas>
-
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <script>
 
-let scene,camera,renderer,heart;
-let particles=[];
-let stars;
-let t=0;
-let explodeDone=false;
+let scene, camera, renderer, heart;
+let t = 0;
+let readyName = false;
 
-/* screens */
+/* ===== NAV ===== */
 function go(id){
 document.querySelectorAll(".screen")
 .forEach(s=>s.classList.remove("active"));
-document.getElementById("s"+id).classList.add("active");
+
+document.getElementById("s"+id)
+.classList.add("active");
 }
 
-/* SCENE INIT */
+/* ===== INIT WORLD ===== */
 function initScene(){
 
 go(3);
 
 scene = new THREE.Scene();
 
-camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+camera = new THREE.PerspectiveCamera(
+75, innerWidth/innerHeight, 0.1, 1000
+);
+
 camera.position.z = 28;
 
 renderer = new THREE.WebGLRenderer({antialias:true});
@@ -163,104 +172,25 @@ renderer.setSize(innerWidth,innerHeight);
 document.body.appendChild(renderer.domElement);
 
 /* LIGHTS */
-scene.add(new THREE.AmbientLight(0xffffff,0.3));
+scene.add(new THREE.AmbientLight(0xffffff,0.35));
+
 let light = new THREE.PointLight(0xff4da6,2);
 light.position.set(10,10,10);
 scene.add(light);
 
-/* STARS (particle system) */
-let starGeo = new THREE.BufferGeometry();
-let starCount = 1200;
-
-let pos = [];
-
-for(let i=0;i<starCount;i++){
-pos.push(
-( Math.random()-0.5)*200,
-( Math.random()-0.5)*200,
-( Math.random()-0.5)*200
-);
-}
-
-starGeo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
-
-let starMat = new THREE.PointsMaterial({
-color:0xffffff,
-size:0.6,
-transparent:true,
-opacity:0.8
-});
-
-stars = new THREE.Points(starGeo,starMat);
-scene.add(stars);
-
-/* GRAPH GRID */
-drawGraph();
-
+/* START LOOP */
 animate();
 
 }
 
-/* GRAPH (real coordinate system) */
-function drawGraph(){
-
-let canvas = document.getElementById("graph");
-let ctx = canvas.getContext("2d");
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
-function render(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-let w = canvas.width;
-let h = canvas.height;
-
-ctx.strokeStyle="rgba(255,255,255,0.2)";
-
-/* grid */
-for(let i=0;i<w;i+=40){
-ctx.beginPath();
-ctx.moveTo(i,0);
-ctx.lineTo(i,h);
-ctx.stroke();
-}
-
-for(let j=0;j<h;j+=40){
-ctx.beginPath();
-ctx.moveTo(0,j);
-ctx.lineTo(w,j);
-ctx.stroke();
-}
-
-/* axes */
-ctx.strokeStyle="rgba(255,100,200,0.5)";
-ctx.beginPath();
-ctx.moveTo(w/2,0);
-ctx.lineTo(w/2,h);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(0,h/2);
-ctx.lineTo(w,h/2);
-ctx.stroke();
-
-requestAnimationFrame(render);
-}
-
-render();
-}
-
-/* HEART */
+/* ===== HEART ===== */
 function startHeart(){
 
 go(4);
 
-/* heart shape */
 let shape = new THREE.Shape();
 
-for(let i=0;i<Math.PI*2;i+=0.02){
+for(let i=0;i<Math.PI*2;i+=0.03){
 
 let x = 16*Math.pow(Math.sin(i),3);
 let y = 13*Math.cos(i) - 5*Math.cos(2*i)
@@ -273,91 +203,78 @@ let geo = new THREE.ShapeGeometry(shape);
 
 let mat = new THREE.MeshPhongMaterial({
 color:0xff2fa5,
-emissive:0x550022,
+emissive:0x330011,
 side:THREE.DoubleSide
 });
 
 heart = new THREE.Mesh(geo,mat);
-heart.scale.set(0,0,0);
+
+/* يبدأ صغير */
+heart.scale.set(0.01,0.01,0.01);
 
 scene.add(heart);
 
 }
 
-/* EXPLOSION */
-function explode(){
-
-if(explodeDone) return;
-explodeDone=true;
-
-for(let i=0;i<200;i++){
-
-let geo = new THREE.SphereGeometry(0.2,6,6);
-let mat = new THREE.MeshBasicMaterial({color:0xff4da6});
-
-let p = new THREE.Mesh(geo,mat);
-
-p.position.set(0,0,0);
-
-scene.add(p);
-
-particles.push({
-mesh:p,
-vx:(Math.random()-0.5)*0.3,
-vy:(Math.random()-0.5)*0.3,
-vz:(Math.random()-0.5)*0.3
-});
-
-}
-}
-
-/* ANIMATE */
+/* ===== ANIMATION ===== */
 function animate(){
 
 requestAnimationFrame(animate);
 
-/* stars motion */
-if(stars){
-stars.rotation.y += 0.0005;
+t += 0.015;
+
+/* heart build */
+if(heart){
+
+if(heart.scale.x < 1){
+heart.scale.x += 0.015;
+heart.scale.y += 0.015;
+heart.scale.z += 0.015;
 }
 
-/* camera cinematic orbit */
-if(heart){
-t += 0.01;
-
 /* heartbeat physics */
-let beat = 1 + Math.sin(t*3)*0.05;
+let beat = 1 + Math.sin(t*4)*0.05;
 heart.scale.set(beat,beat,beat);
 
-/* rotation */
+/* rotation cinematic */
 heart.rotation.y += 0.01;
 
-/* cinematic camera orbit */
+/* camera orbit */
 camera.position.x = Math.sin(t)*30;
 camera.position.z = Math.cos(t)*30;
 camera.lookAt(0,0,0);
 
-/* trigger explosion */
-if(beat > 1.04){
-explode();
+/* light pulse */
+scene.children.forEach(obj=>{
+if(obj.isPointLight){
+obj.intensity = 1.5 + Math.sin(t*3)*0.3;
 }
-}
-
-/* explosion update */
-particles.forEach(p=>{
-p.mesh.position.x += p.vx;
-p.mesh.position.y += p.vy;
-p.mesh.position.z += p.vz;
 });
 
+/* NAME TRIGGER */
+if(!readyName && beat > 1.03){
+readyName = true;
+
+let name = document.getElementById("name");
+
+name.style.opacity = 1;
+name.style.fontSize = "85px";
+name.style.transform = "translateY(0px)";
+}
+
+}
+
 renderer.render(scene,camera);
+
 }
 
 /* resize */
 window.addEventListener("resize",()=>{
+if(camera && renderer){
 camera.aspect = innerWidth/innerHeight;
 camera.updateProjectionMatrix();
 renderer.setSize(innerWidth,innerHeight);
+}
 });
 
 </script>
