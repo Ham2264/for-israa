@@ -1,283 +1,334 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Esraa 3D Heart Journey</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+<meta charset="UTF-8">
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Cairo',sans-serif;
-}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-body{
-overflow:hidden;
-background:radial-gradient(circle at center,#120018,#000);
-color:white;
-}
+<title>Museum of Esraa</title>
 
-/* ===== SCREENS ===== */
-.screen{
-position:absolute;
-width:100%;
-height:100%;
-display:none;
-justify-content:center;
-align-items:center;
-text-align:center;
-flex-direction:column;
-z-index:10;
-}
+<link rel="stylesheet" href="style.css">
 
-.active{
-display:flex;
-}
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-.card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(12px);
-padding:30px;
-border-radius:25px;
-max-width:380px;
-box-shadow:0 0 40px rgba(255,0,150,0.25);
-}
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-/* BUTTON */
-button{
-margin-top:15px;
-padding:12px 22px;
-border:none;
-border-radius:30px;
-background:#ff2fa5;
-color:white;
-cursor:pointer;
-font-size:15px;
-box-shadow:0 0 20px #ff2fa5;
-transition:0.3s;
-}
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
 
-button:hover{
-transform:scale(1.08);
-}
-
-/* NAME */
-#name{
-position:absolute;
-top:55%;
-width:100%;
-text-align:center;
-font-size:0px;
-opacity:0;
-color:#ff5fd2;
-text-shadow:0 0 25px #ff2fa5,0 0 60px #ff2fa5;
-transition:2s;
-z-index:5;
-}
-
-/* CANVAS */
-canvas{
-position:absolute;
-top:0;
-left:0;
-}
-
-/* small hint */
-.hint{
-opacity:0.8;
-font-size:14px;
-margin-top:10px;
-}
-</style>
 </head>
 
 <body>
 
-<!-- ===== STAGE 1 ===== -->
-<div class="screen active" id="s1">
-<div class="card">
-<h1>💖 تجربة قلب إسراء</h1>
-<p>رحلة 3D سينمائية + مراحل + مؤثرات</p>
-<button onclick="go(2)">ابدأ</button>
-</div>
-</div>
+<!-- خلفية النجوم -->
 
-<!-- ===== STAGE 2 ===== -->
-<div class="screen" id="s2">
-<div class="card">
-<h1>🌌 المرحلة 1</h1>
-<p>تهيئة الكون الثلاثي الأبعاد</p>
-<div class="hint">جاري تحميل الإضاءة والنجوم...</div>
-<button onclick="initScene()">تشغيل العالم</button>
-</div>
-</div>
+<div id="stars"></div>
 
-<!-- ===== STAGE 3 ===== -->
-<div class="screen" id="s3">
-<div class="card">
-<h1>💗 المرحلة 2</h1>
-<p>تشكيل القلب الرياضي</p>
-<div class="hint">سيبدأ الرسم الآن</div>
-<button onclick="startHeart()">ابدأ الرسم</button>
-</div>
+<div id="particles"></div>
+
+<!-- شاشة البداية -->
+
+<section id="loading-screen">
+
+<div class="loading-box">
+
+<h1 id="typing"></h1>
+
+<div class="progress-container">
+
+<div id="progress-bar"></div>
+
 </div>
 
-<!-- ===== STAGE 4 ===== -->
-<div class="screen" id="s4">
-<div class="card">
-<h1>🎀 النهاية</h1>
-<p>تم اكتمال القلب بنجاح</p>
-<button onclick="location.reload()">إعادة التجربة</button>
-</div>
+<p id="percent">0%</p>
+
 </div>
 
-<div id="name">إسراء</div>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<!-- أبواب المتحف -->
 
-<script>
+<section id="museum-doors">
 
-let scene, camera, renderer, heart;
-let t = 0;
-let readyName = false;
+<div class="door left-door"></div>
 
-/* ===== NAV ===== */
-function go(id){
-document.querySelectorAll(".screen")
-.forEach(s=>s.classList.remove("active"));
+<div class="door right-door"></div>
 
-document.getElementById("s"+id)
-.classList.add("active");
-}
+<div class="museum-title">
 
-/* ===== INIT WORLD ===== */
-function initScene(){
+<h1>Museum of Esraa</h1>
 
-go(3);
+<p>Dedicated to someone unforgettable.</p>
 
-scene = new THREE.Scene();
+<button id="enterBtn">
 
-camera = new THREE.PerspectiveCamera(
-75, innerWidth/innerHeight, 0.1, 1000
-);
+ادخلي المتحف
 
-camera.position.z = 28;
+</button>
 
-renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight);
-document.body.appendChild(renderer.domElement);
+</div>
 
-/* LIGHTS */
-scene.add(new THREE.AmbientLight(0xffffff,0.35));
+</section>
 
-let light = new THREE.PointLight(0xff4da6,2);
-light.position.set(10,10,10);
-scene.add(light);
+<!-- المتحف -->
 
-/* START LOOP */
-animate();
+<main id="museum">
 
-}
+<!-- القاعة الأولى -->
 
-/* ===== HEART ===== */
-function startHeart(){
+<section class="room">
 
-go(4);
+<div class="glass-card center">
 
-let shape = new THREE.Shape();
+<h2>Exhibit #001</h2>
 
-for(let i=0;i<Math.PI*2;i+=0.03){
+<h1 class="esraa-name">
 
-let x = 16*Math.pow(Math.sin(i),3);
-let y = 13*Math.cos(i) - 5*Math.cos(2*i)
-- 2*Math.cos(3*i) - Math.cos(4*i);
+إسراء
 
-shape.lineTo(x*0.3,y*0.3);
-}
+</h1>
 
-let geo = new THREE.ShapeGeometry(shape);
+<p>
 
-let mat = new THREE.MeshPhongMaterial({
-color:0xff2fa5,
-emissive:0x330011,
-side:THREE.DoubleSide
-});
+هذه ليست مجرد صفحة...
 
-heart = new THREE.Mesh(geo,mat);
+بل مكان صُنع خصيصًا لشخص واحد.
 
-/* يبدأ صغير */
-heart.scale.set(0.01,0.01,0.01);
+</p>
 
-scene.add(heart);
+</div>
 
-}
+</section>
 
-/* ===== ANIMATION ===== */
-function animate(){
+<!-- القاعة الثانية -->
 
-requestAnimationFrame(animate);
+<section class="room">
 
-t += 0.015;
+<h2 class="section-title">
 
-/* heart build */
-if(heart){
+لماذا بُني هذا المتحف؟
 
-if(heart.scale.x < 1){
-heart.scale.x += 0.015;
-heart.scale.y += 0.015;
-heart.scale.z += 0.015;
-}
+</h2>
 
-/* heartbeat physics */
-let beat = 1 + Math.sin(t*4)*0.05;
-heart.scale.set(beat,beat,beat);
+<div class="glass-card">
 
-/* rotation cinematic */
-heart.rotation.y += 0.01;
+<p id="typingMessage"></p>
 
-/* camera orbit */
-camera.position.x = Math.sin(t)*30;
-camera.position.z = Math.cos(t)*30;
-camera.lookAt(0,0,0);
+</div>
 
-/* light pulse */
-scene.children.forEach(obj=>{
-if(obj.isPointLight){
-obj.intensity = 1.5 + Math.sin(t*3)*0.3;
-}
-});
+</section>
 
-/* NAME TRIGGER */
-if(!readyName && beat > 1.03){
-readyName = true;
+<!-- القاعة الثالثة -->
 
-let name = document.getElementById("name");
+<section class="room">
 
-name.style.opacity = 1;
-name.style.fontSize = "85px";
-name.style.transform = "translateY(0px)";
-}
+<h2 class="section-title">
 
-}
+اكتشفي البطاقات
 
-renderer.render(scene,camera);
+</h2>
 
-}
+<div class="cards">
 
-/* resize */
-window.addEventListener("resize",()=>{
-if(camera && renderer){
-camera.aspect = innerWidth/innerHeight;
-camera.updateProjectionMatrix();
-renderer.setSize(innerWidth,innerHeight);
-}
-});
+<div class="flip-card">
 
-</script>
+<div class="flip-inner">
+
+<div class="front">
+
+ابتسامتك
+
+</div>
+
+<div class="back">
+
+تجعل اليوم ألطف.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="flip-card">
+
+<div class="flip-inner">
+
+<div class="front">
+
+وجودك
+
+</div>
+
+<div class="back">
+
+له أثر جميل.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="flip-card">
+
+<div class="flip-inner">
+
+<div class="front">
+
+طيبتك
+
+</div>
+
+<div class="back">
+
+شيء نادر.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="flip-card">
+
+<div class="flip-inner">
+
+<div class="front">
+
+إسراء
+
+</div>
+
+<div class="back">
+
+أفضل قطعة في المتحف.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- القاعة الرابعة -->
+
+<section class="room">
+
+<h2 class="section-title">
+
+سماء الأمنيات
+
+</h2>
+
+<canvas id="heartCanvas"></canvas>
+
+<h1 id="heartName">
+
+إسراء
+
+</h1>
+
+</section>
+
+<!-- القاعة الخامسة -->
+
+<section class="room">
+
+<div class="rose-box">
+
+<div class="rose">
+
+🌹
+
+</div>
+
+<p>
+
+اضغطي على الوردة
+
+</p>
+
+</div>
+
+</section>
+
+<!-- الرسالة -->
+
+<section class="room">
+
+<div class="letter">
+
+<h2>
+
+إلى إسراء
+
+</h2>
+
+<p id="letterText"></p>
+
+</div>
+
+</section>
+
+<!-- النهاية -->
+
+<section class="room final-room">
+
+<h1>
+
+شكراً لأنك وصلتي للنهاية 🤍
+
+</h1>
+
+<p>
+
+إذا كان هناك شخص يستحق متحفًا كاملًا...
+
+فهو أنتِ.
+
+</p>
+
+<button id="secretBtn">
+
+هناك شيء أخير...
+
+</button>
+
+</section>
+
+</main>
+
+<!-- الشاشة السرية -->
+
+<div id="secretScreen">
+
+<div class="big-heart">
+
+❤
+
+</div>
+
+<h1>
+
+إسراء
+
+</h1>
+
+<p>
+
+You are the masterpiece this museum was built for.
+
+</p>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
+
 </html>
