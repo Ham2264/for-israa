@@ -1,0 +1,796 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+
+background:
+linear-gradient(180deg,#09090f,#13142b,#1d1237);
+
+color:white;
+
+overflow-x:hidden;
+
+}
+
+/* النجوم */
+
+#stars{
+
+position:fixed;
+
+width:100%;
+
+height:100%;
+
+left:0;
+
+top:0;
+
+z-index:-2;
+
+background-image:
+
+radial-gradient(white 1px,transparent 1px);
+
+background-size:55px 55px;
+
+opacity:.18;
+
+animation:starsMove 90s linear infinite;
+
+}
+
+@keyframes starsMove{
+
+from{
+
+transform:translateY(0);
+
+}
+
+to{
+
+transform:translateY(-800px);
+
+}
+
+}
+
+/* الجسيمات */
+
+#particles{
+
+position:fixed;
+
+left:0;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+pointer-events:none;
+
+z-index:-1;
+
+}
+
+/* شاشة البداية */
+
+#loading-screen{
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+padding:20px;
+
+}
+
+.loading-box{
+
+width:90%;
+
+max-width:420px;
+
+}
+
+#typing{
+
+font-size:30px;
+
+font-weight:900;
+
+color:#ffd4ff;
+
+min-height:80px;
+
+text-shadow:
+
+0 0 15px #ff6ad5;
+
+}
+
+.progress-container{
+
+margin-top:35px;
+
+width:100%;
+
+height:10px;
+
+background:rgba(255,255,255,.12);
+
+border-radius:999px;
+
+overflow:hidden;
+
+}
+
+#progress-bar{
+
+width:0%;
+
+height:100%;
+
+background:
+
+linear-gradient(90deg,#ff7fd9,#ffb2ea);
+
+box-shadow:
+
+0 0 18px #ff8be2;
+
+transition:.3s;
+
+}
+
+#percent{
+
+margin-top:15px;
+
+font-size:18px;
+
+color:#ffd9f8;
+
+}
+
+/* أبواب المتحف */
+
+#museum-doors{
+
+display:none;
+
+position:relative;
+
+height:100vh;
+
+overflow:hidden;
+
+}
+
+.door{
+
+position:absolute;
+
+top:0;
+
+width:50%;
+
+height:100%;
+
+background:
+
+linear-gradient(180deg,#1d1d2b,#09090f);
+
+transition:2s;
+
+z-index:5;
+
+}
+
+.left-door{
+
+left:0;
+
+border-right:2px solid rgba(255,255,255,.08);
+
+}
+
+.right-door{
+
+right:0;
+
+border-left:2px solid rgba(255,255,255,.08);
+
+}
+
+.open .left-door{
+
+transform:translateX(-100%);
+
+}
+
+.open .right-door{
+
+transform:translateX(100%);
+
+}
+
+.museum-title{
+
+position:absolute;
+
+width:100%;
+
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+z-index:10;
+
+padding:20px;
+
+}
+
+.museum-title h1{
+
+font-size:42px;
+
+font-weight:900;
+
+background:linear-gradient(90deg,#fff,#ff8bdc);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+text-shadow:0 0 30px rgba(255,255,255,.25);
+
+}
+
+.museum-title p{
+
+margin-top:15px;
+
+font-size:18px;
+
+color:#ffd8f7;
+
+}
+
+#enterBtn{
+
+margin-top:40px;
+
+padding:15px 40px;
+
+border:none;
+
+border-radius:999px;
+
+background:linear-gradient(90deg,#ff69c8,#ff97e5);
+
+color:white;
+
+font-size:17px;
+
+cursor:pointer;
+
+box-shadow:
+
+0 0 25px rgba(255,105,200,.5);
+
+transition:.35s;
+
+}
+
+#enterBtn:hover{
+
+transform:scale(1.08);
+
+}
+
+/* المتحف */
+
+#museum{
+
+display:none;
+
+padding-bottom:120px;
+
+}
+
+.room{
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+padding:35px 20px;
+
+}
+
+/* البطاقات الزجاجية */
+
+.glass-card{
+
+width:100%;
+
+max-width:380px;
+
+padding:30px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.18);
+
+box-shadow:
+
+0 10px 40px rgba(0,0,0,.35);
+
+text-align:center;
+
+}
+
+.section-title{
+
+font-size:32px;
+
+margin-bottom:35px;
+
+color:#ffd7f7;
+
+text-shadow:0 0 15px rgba(255,120,220,.5);
+
+}
+
+.esraa-name{
+
+font-size:50px;
+
+margin:20px 0;
+
+color:#ff9de5;
+
+text-shadow:
+
+0 0 20px #ff6fd5,
+
+0 0 40px #ff6fd5;
+
+animation:pulse 2s infinite;
+
+}
+
+@keyframes pulse{
+
+0%,100%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.05);
+
+}
+
+}
+/* ===========================
+   FLIP CARDS
+=========================== */
+
+.cards{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+width:100%;
+max-width:420px;
+}
+
+.flip-card{
+perspective:1000px;
+height:180px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:0.8s;
+transform-style:preserve-3d;
+cursor:pointer;
+}
+
+.flip-card:hover .flip-inner,
+.flip-card.active .flip-inner{
+transform:rotateY(180deg);
+}
+
+.front,
+.back{
+
+position:absolute;
+
+width:100%;
+
+height:100%;
+
+border-radius:25px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+padding:20px;
+
+backface-visibility:hidden;
+
+background:rgba(255,255,255,.08);
+
+border:1px solid rgba(255,255,255,.18);
+
+backdrop-filter:blur(15px);
+
+box-shadow:0 15px 30px rgba(0,0,0,.3);
+
+}
+
+.front{
+
+font-size:24px;
+
+font-weight:bold;
+
+color:#ffd8ff;
+
+}
+
+.back{
+
+transform:rotateY(180deg);
+
+font-size:18px;
+
+color:white;
+
+}
+
+/* ===========================
+   HEART CANVAS
+=========================== */
+
+#heartCanvas{
+
+width:100%;
+
+max-width:420px;
+
+height:420px;
+
+border-radius:25px;
+
+background:rgba(255,255,255,.04);
+
+border:1px solid rgba(255,255,255,.1);
+
+box-shadow:0 0 40px rgba(255,100,210,.15);
+
+margin-bottom:20px;
+
+}
+
+#heartName{
+
+font-size:48px;
+
+font-weight:900;
+
+color:#ff8bdd;
+
+text-shadow:
+
+0 0 20px #ff7bd8,
+
+0 0 45px #ff5ecb;
+
+animation:pulse 2s infinite;
+
+}
+
+/* ===========================
+   ROSE
+=========================== */
+
+.rose-box{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+gap:25px;
+
+}
+
+.rose{
+
+font-size:90px;
+
+cursor:pointer;
+
+transition:.5s;
+
+filter:drop-shadow(0 0 20px hotpink);
+
+animation:floatRose 3s ease-in-out infinite;
+
+}
+
+.rose:hover{
+
+transform:scale(1.2) rotate(-8deg);
+
+}
+
+@keyframes floatRose{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-12px);
+
+}
+
+}
+
+/* ===========================
+   LETTER
+=========================== */
+
+.letter{
+
+width:100%;
+
+max-width:420px;
+
+padding:35px;
+
+background:rgba(255,255,255,.08);
+
+border-radius:30px;
+
+border:1px solid rgba(255,255,255,.15);
+
+backdrop-filter:blur(18px);
+
+box-shadow:0 10px 40px rgba(0,0,0,.35);
+
+}
+
+.letter h2{
+
+font-size:34px;
+
+margin-bottom:25px;
+
+color:#ffd7ff;
+
+}
+
+#letterText{
+
+line-height:2.2;
+
+font-size:18px;
+
+color:white;
+
+}
+
+/* ===========================
+   FINAL
+=========================== */
+
+.final-room h1{
+
+font-size:40px;
+
+margin-bottom:20px;
+
+text-align:center;
+
+}
+
+.final-room p{
+
+font-size:20px;
+
+max-width:420px;
+
+text-align:center;
+
+line-height:2;
+
+color:#ffe5ff;
+
+}
+
+#secretBtn{
+
+margin-top:35px;
+
+padding:16px 40px;
+
+border:none;
+
+border-radius:999px;
+
+background:linear-gradient(90deg,#ff73d3,#ffb6ef);
+
+color:white;
+
+font-size:18px;
+
+cursor:pointer;
+
+transition:.35s;
+
+}
+
+#secretBtn:hover{
+
+transform:scale(1.08);
+
+}
+
+/* ===========================
+   SECRET SCREEN
+=========================== */
+
+#secretScreen{
+
+position:fixed;
+
+inset:0;
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+background:#05050b;
+
+z-index:9999;
+
+}
+
+.big-heart{
+
+font-size:170px;
+
+color:#ff4dbd;
+
+animation:pulse 1.6s infinite;
+
+text-shadow:
+
+0 0 30px hotpink,
+
+0 0 70px hotpink;
+
+}
+
+#secretScreen h1{
+
+font-size:70px;
+
+margin-top:15px;
+
+color:white;
+
+}
+
+#secretScreen p{
+
+margin-top:20px;
+
+font-size:22px;
+
+text-align:center;
+
+max-width:420px;
+
+line-height:2;
+
+color:#ffdff9;
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:480px){
+
+.section-title{
+
+font-size:27px;
+
+}
+
+.museum-title h1{
+
+font-size:34px;
+
+}
+
+.big-heart{
+
+font-size:130px;
+
+}
+
+#secretScreen h1{
+
+font-size:50px;
+
+}
+
+.cards{
+
+grid-template-columns:1fr;
+
+}
+
+}
